@@ -1,6 +1,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
     <head>
+        <?php
+        if (getenv('GA_TRACKING_ID') !== false) {
+            print "<script async src=\"https://www.googletagmanager.com/gtag/js?id=". getenv('GA_TRACKING_ID') . "\"></script>";
+            print "<script>";
+            print "  window.dataLayer = window.dataLayer || [];";
+            print "  function gtag(){dataLayer.push(arguments);}";
+            print "  gtag('js', new Date());";
+            print "  gtag('config', 'UA-119670592-1');";
+            print "</script>";
+        }
+        ?>
+        <?php
+        if (getenv('PINGDOM_RUM') !== false) {
+            print "<script src=\"" . getenv('PINGDOM_RUM') . "\" async></script>";
+        }
+        ?>
+        <?php
+        if (getenv('SENTRY_CLIENT_DSN') !== false) {
+            print "<script src=\"https://cdn.ravenjs.com/3.25.2/raven.min.js\" crossorigin=\"anonymous\"></script>";
+            print "<script>Raven.config(\"" . getenv('SENTRY_CLIENT_DSN') . "\").install()</script>";
+        }
+        ?>
         <meta http-equiv="Content-Language" content="UTF-8" />
         <meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8" />
 
@@ -52,10 +74,11 @@ function strip_seps($haystack) {
 if (WorkbenchConfig::get()->value("checkForLatestVersion") && extension_loaded('curl') && (isset($_GET['autoLogin']) || 'login.php'==basename($_SERVER['PHP_SELF']))) {
     try {
         $ch = curl_init();
-        curl_setopt ($ch, CURLOPT_URL, 'https://api.github.com/repos/ryanbrainard/forceworkbench/tags');
+        curl_setopt ($ch, CURLOPT_URL, 'https://api.github.com/repos/forceworkbench/forceworkbench/tags');
         curl_setopt ($ch, CURLOPT_USERAGENT, getWorkbenchUserAgent());
         curl_setopt($ch, CURLOPT_TIMEOUT, 2);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         $tagsResponse = curl_exec($ch);
         $info = curl_getinfo($ch);
         curl_close($ch);
@@ -91,7 +114,7 @@ if (WorkbenchConfig::get()->value("checkForLatestVersion") && extension_loaded('
 
         if ($latestChannelVersion != $currentVersion) {
             print "<div style='background-color: #EAE9E4; width: 100%; padding: 2px;'>" .
-                    "<a href='https://github.com/ryanbrainard/forceworkbench/tags' target='_blank' " .
+                    "<a href='https://github.com/forceworkbench/forceworkbench/tags' target='_blank' " .
                         "style='font-size: 8pt; font-weight: bold; color: #0046ad;'>" .
                         "A newer version of Workbench is available for download</a>" .
                   "</div><br/>";

@@ -276,6 +276,11 @@ $config["header_LoginOptions"] = array(
     );
 
     $GLOBALS['API_VERSIONS'] = array(
+	"46.0" => "46.0",
+        "45.0" => "45.0",
+        "44.0" => "44.0",
+        "43.0" => "43.0",
+        "42.0" => "42.0",
         "41.0" => "41.0",
         "40.0" => "40.0",
         "39.0" => "39.0",
@@ -315,7 +320,7 @@ $config["header_LoginOptions"] = array(
     $config["defaultApiVersion"]  = array(
         "label" => "Default API Version",
         "description" => "Default API version to be used for login. This setting does not affect the API version of the current session. Recommended to choose latest version. Some features may act unexpectedly when using older versions.",
-        "default" => "41.0",
+        "default" => "45.0",
         "overrideable" => true,
         "dataType" => "picklist",
         "valuesToLabels" => $GLOBALS['API_VERSIONS']
@@ -797,11 +802,11 @@ $config["header_Performance"] = array(
         "minValue" => 1
     );
 
-$config["header_SecurityOptions"] = array(
-    "label" => "Security Options",
-    "display" => true,
-    "isHeader" => true
-);
+    $config["header_SecurityOptions"] = array(
+        "label" => "Security Options",
+        "display" => true,
+        "isHeader" => true
+    );
 
     $config["invalidateSessionOnLogout"] = array(
         "label" => "Invalidate Session on Logout",
@@ -873,9 +878,18 @@ $config["header_SecurityOptions"] = array(
     );
 
     // This should never be overrideable by end users; instead, admins SHOULD override default in overrides.php
-    $config["rc4Secret"] = array(
-        "label" => "RC4 Salting Secret",
-        "description" => "Used for salting the RC4 encryption.",
+    $config["sodiumKey"] = array(
+        "label" => "Libsodium Encryption Key",
+        "description" => "Used for salting libsodium encryption.",
+        "default" => "OVERRIDE_ME_IN_CONFIG_OVERRIDES_PHP",
+        "overrideable" => false,
+        "dataType" => "string"
+    );
+
+    // This should never be overrideable by end users; instead, admins SHOULD override default in overrides.php
+    $config["nonce"] = array(
+        "label" => "Nonce For libsodium Encryption",
+        "description" => "required nonce value for libsodium encryption.",
         "default" => "OVERRIDE_ME_IN_CONFIG_OVERRIDES_PHP",
         "overrideable" => false,
         "dataType" => "string"
